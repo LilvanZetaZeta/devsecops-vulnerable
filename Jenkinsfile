@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo 'Preparando el entorno y dependencias...'
+                echo 'Preparando el entorno y dependencias de python'
                 // Se instala Flask para que el código pueda ejecutarse
                 sh 'pip3 install Flask --break-system-packages'
             }
