@@ -88,6 +88,11 @@ pipeline {
 
                     docker volume create zap-reports
 
+                    docker run --rm \
+                        -u root \
+                        -v zap-reports:/zap/wrk \
+                        alpine sh -c "chown -R 1000:1000 /zap/wrk"
+
                     docker create \
                         --name zap-scan \
                         --network devsecops-net \
