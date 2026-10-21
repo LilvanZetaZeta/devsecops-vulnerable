@@ -11,7 +11,7 @@ pipeline {
             steps {
                 echo 'Preparando el entorno y dependencias...'
                 // Se instala Flask para que el código pueda ejecutarse
-                sh 'pip3 install Flask'
+                sh 'pip3 install Flask --break-system-packages'
             }
         }
 
