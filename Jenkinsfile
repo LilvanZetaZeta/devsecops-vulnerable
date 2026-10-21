@@ -1,3 +1,4 @@
+
 pipeline {
     agent any
 
@@ -73,7 +74,8 @@ pipeline {
 
                 dependencyCheck(
                     odcInstallation: 'DP-Check',
-                    additionalArguments: "--scan . --format ALL --out . --nvdApiKey ${env.NVD_API_KEY}",
+                    nvdCredentialsId: 'nvd-api-key',
+                    additionalArguments: '--scan . --format ALL --out .',
                     stopBuild: true
                 )
 
