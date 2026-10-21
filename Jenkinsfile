@@ -73,7 +73,8 @@ pipeline {
 
                 dependencyCheck(
                     odcInstallation: 'DP-Check',
-                    additionalArguments: '--scan . --format ALL --out . --nvdApiDelay 8000'
+                    additionalArguments: '--scan . --format ALL --out . --nvdApiKey "$NVD_API_KEY"',
+                    stopBuild: true
                 )
 
                 dependencyCheckPublisher(
