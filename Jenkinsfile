@@ -26,9 +26,14 @@ pipeline {
         stage('Analyze') {
             steps {
                 echo 'Ejecutando el análisis de calidad y seguridad con SonarQube...'
-                // 'SonarQube' debe coincidir con el nombre que le diste en Global Tool Configuration
-                withSonarQubeEnv('SonarQube') {
-                    sh 'sonar-scanner -Dsonar.projectKey=app-vulnerable -Dsonar.sources=.'
+                script {
+                    // Carga la ruta de la herramienta configurada globalmente
+                    def scannerHome = tool 'sonar-scanner'
+                    
+                    withSonarQubeEnv('SonarQube') {
+                        // Usamos la ruta absoluta del scanner
+                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=app-vulnerable -Dsonar.sources=."
+                    }
                 }
             }
         }
