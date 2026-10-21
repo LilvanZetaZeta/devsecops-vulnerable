@@ -73,7 +73,7 @@ pipeline {
 
                 dependencyCheck(
                     odcInstallation: 'DP-Check',
-                    additionalArguments: '--scan . --format ALL --out . --nvdApiKey "$NVD_API_KEY"',
+                    additionalArguments: "--scan . --format ALL --out . --nvdApiKey ${env.NVD_API_KEY}",
                     stopBuild: true
                 )
 
