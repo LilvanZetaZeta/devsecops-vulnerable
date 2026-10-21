@@ -73,7 +73,7 @@ pipeline {
 
                 dependencyCheck(
                     odcInstallation: 'DP-Check',
-                    additionalArguments: '--scan . --format HTML --out .'
+                    additionalArguments: '--scan . --format ALL --out .'
                 )
 
                 dependencyCheckPublisher(
@@ -84,14 +84,20 @@ pipeline {
                 echo 'Ejecutando OWASP ZAP...'
 
                 sh '''
-                    docker run --rm \
+                    docker rm -f zap-scan 2>/dev/null || true
+
+                    docker create \
+                        --name zap-scan \
                         --network devsecops-net \
-                        -v "$WORKSPACE:/zap/wrk:rw" \
                         ghcr.io/zaproxy/zaproxy:stable \
                         zap-baseline.py \
-                        -t "$APP_URL" \
+                        -t "$APP_URL/hello?name=TEST" \
                         -r zap_report.html \
                         -I
+
+                    docker start -a zap-scan
+                    docker cp zap-scan:/zap/wrk/zap_report.html ./zap_report.html
+                    docker rm -f zap-scan
                 '''
             }
         }
