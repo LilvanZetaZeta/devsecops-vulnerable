@@ -11,7 +11,7 @@ pipeline {
             steps {
                 echo 'Preparando el entorno y dependencias...'
                 // Se instala Flask para que el código pueda ejecutarse
-                sh 'pip install Flask'
+                sh 'pip3 install Flask'
             }
         }
 
@@ -19,7 +19,7 @@ pipeline {
             steps {
                 echo 'Ejecutando pruebas básicas...'
                 // Validación básica de sintaxis de Python para el app.py
-                sh 'python -m py_compile app.py'
+                sh 'python3 -m py_compile app.py'
             }
         }
 
@@ -37,7 +37,7 @@ pipeline {
             steps {
                 echo 'Desplegando la aplicación en el entorno de prueba...'
                 // Levantamos la aplicación vulnerable en segundo plano para que ZAP la escanee
-                sh 'nohup python app.py > flask_app.log 2>&1 &'
+                sh 'nohup python3 app.py > flask_app.log 2>&1 &'
                 // Pausa breve para asegurar que el servidor web levante correctamente
                 sleep 5 
             }
@@ -61,7 +61,7 @@ pipeline {
         always {
             echo 'Limpiando el entorno y guardando evidencias...'
             // Matamos el proceso de la aplicación Flask para no ocupar el puerto[cite: 1]
-            sh 'pkill -f "python app.py" || true'
+            sh 'pkill -f "python3 app.py" || true'
             // Guardamos los reportes generados para que puedas revisarlos y sacar las capturas
             archiveArtifacts artifacts: 'dependency-check-report.html, zap_report.html', allowEmptyArchive: true
         }
