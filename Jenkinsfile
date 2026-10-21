@@ -73,7 +73,7 @@ pipeline {
 
                 dependencyCheck(
                     odcInstallation: 'DP-Check',
-                    additionalArguments: '--scan . --format ALL --out .'
+                    additionalArguments: '--scan . --format ALL --out . --nvdApiDelay 8000'
                 )
 
                 dependencyCheckPublisher(
@@ -86,9 +86,12 @@ pipeline {
                 sh '''
                     docker rm -f zap-scan 2>/dev/null || true
 
+                    docker volume create zap-reports
+
                     docker create \
                         --name zap-scan \
                         --network devsecops-net \
+                        -v zap-reports:/zap/wrk \
                         ghcr.io/zaproxy/zaproxy:stable \
                         zap-baseline.py \
                         -t "$APP_URL/hello?name=TEST" \
@@ -96,7 +99,9 @@ pipeline {
                         -I
 
                     docker start -a zap-scan
+
                     docker cp zap-scan:/zap/wrk/zap_report.html ./zap_report.html
+
                     docker rm -f zap-scan
                 '''
             }
